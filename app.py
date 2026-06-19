@@ -31,12 +31,162 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-/* Tighter metrics */
-[data-testid="metric-container"] { padding: 8px 12px; }
-/* Primary button */
-div.stButton > button[kind="primary"] { font-weight: 600; }
-/* Download button same width */
-div.stDownloadButton > button { width: 100%; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+/* === Liquid Glass — Anki Blue ===================================== */
+
+/* Font toàn app */
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* Background gradient */
+.stApp {
+    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 55%, #60a5fa 100%) !important;
+}
+
+/* Ẩn Streamlit chrome */
+#MainMenu, footer, header { visibility: hidden; }
+[data-testid="stToolbar"] { display: none; }
+
+/* Main container — frosted glass */
+.block-container {
+    background: rgba(255,255,255,0.2) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border: 1px solid rgba(255,255,255,0.5) !important;
+    border-radius: 24px !important;
+    padding: 2rem 2rem 3rem !important;
+    margin-top: 1.5rem !important;
+}
+
+/* Tiêu đề */
+h1, h2, h3 { color: #0a2a4a !important; }
+p, label, .stMarkdown p { color: rgba(10,42,74,0.75) !important; }
+
+/* Text input */
+.stTextInput > div > div > input,
+.stNumberInput > div > div > input {
+    background: rgba(255,255,255,0.35) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255,255,255,0.65) !important;
+    border-radius: 10px !important;
+    color: #0a2a4a !important;
+    font-family: 'Inter', sans-serif !important;
+}
+.stTextInput > div > div > input:focus,
+.stNumberInput > div > div > input:focus {
+    border-color: rgba(2,136,206,0.5) !important;
+    box-shadow: 0 0 0 3px rgba(2,136,206,0.12) !important;
+}
+
+/* File uploader */
+[data-testid="stFileUploader"] > div {
+    background: rgba(255,255,255,0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1.5px dashed rgba(255,255,255,0.65) !important;
+    border-radius: 14px !important;
+}
+
+/* Primary button — Anki blue */
+div.stButton > button[kind="primary"],
+.stButton > button[kind="primary"] {
+    background: rgba(2,136,206,0.82) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.25) !important;
+    border-radius: 12px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 500 !important;
+    transition: background .15s !important;
+}
+div.stButton > button[kind="primary"]:hover {
+    background: rgba(2,136,206,0.95) !important;
+}
+
+/* Secondary buttons */
+div.stButton > button:not([kind="primary"]) {
+    background: rgba(255,255,255,0.28) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255,255,255,0.55) !important;
+    border-radius: 10px !important;
+    color: #0a2a4a !important;
+    font-family: 'Inter', sans-serif !important;
+}
+div.stButton > button:not([kind="primary"]):hover {
+    background: rgba(255,255,255,0.42) !important;
+}
+
+/* Download button */
+div.stDownloadButton > button {
+    width: 100% !important;
+    background: rgba(2,136,206,0.82) !important;
+    backdrop-filter: blur(8px) !important;
+    color: #fff !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 10px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 500 !important;
+}
+div.stDownloadButton > button:hover {
+    background: rgba(2,136,206,0.95) !important;
+}
+
+/* Metric cards */
+[data-testid="metric-container"] {
+    background: rgba(255,255,255,0.22) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255,255,255,0.48) !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+}
+[data-testid="metric-container"] label { color: rgba(10,42,74,0.5) !important; }
+[data-testid="metric-container"] [data-testid="stMetricValue"] {
+    color: #0a2a4a !important;
+}
+
+/* Progress bar */
+.stProgress > div > div {
+    background: rgba(255,255,255,0.3) !important;
+    border-radius: 4px !important;
+}
+.stProgress > div > div > div {
+    background: rgba(2,136,206,0.78) !important;
+    border-radius: 4px !important;
+}
+
+/* Expander */
+[data-testid="stExpander"] {
+    background: rgba(255,255,255,0.2) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255,255,255,0.45) !important;
+    border-radius: 12px !important;
+}
+
+/* Success / info / warning alerts */
+[data-testid="stAlert"] {
+    background: rgba(255,255,255,0.25) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255,255,255,0.5) !important;
+    border-radius: 12px !important;
+    color: #0a2a4a !important;
+}
+
+/* Divider */
+hr { border-color: rgba(255,255,255,0.4) !important; }
+
+/* Radio & checkbox label */
+.stRadio label, .stCheckbox label {
+    color: rgba(10,42,74,0.75) !important;
+}
+
+/* Caption */
+.stCaption { color: rgba(10,42,74,0.5) !important; }
 </style>
 """, unsafe_allow_html=True)
 
