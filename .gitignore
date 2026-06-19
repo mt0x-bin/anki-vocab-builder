@@ -1,0 +1,19 @@
+# Cache và output — không commit
+cache/
+output/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+env/
+venv/
+
+# Secrets — tuyệt đối không commit
+.streamlit/secrets.toml
+
+# OS
+.DS_Store
+Thumbs.db
+.streamlit/secrets.toml 
