@@ -35,129 +35,160 @@ st.markdown("""
 
 /* === Liquid Glass — Anki Blue ===================================== */
 
-/* Font toàn app */
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif !important;
-}
+html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
 
 /* Background gradient */
 .stApp {
     background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 55%, #60a5fa 100%) !important;
+    min-height: 100vh !important;
+}
+
+/* Xoá background trắng của các div trung gian Streamlit
+   để gradient hiện ra phía sau glass container */
+.appview-container,
+.main,
+section.main,
+[data-testid="stAppViewContainer"],
+[data-testid="stAppViewBlockContainer"] {
+    background: transparent !important;
+}
+
+/* Glass container chính */
+.block-container {
+    background: rgba(255,255,255,0.18) !important;
+    backdrop-filter: blur(28px) !important;
+    -webkit-backdrop-filter: blur(28px) !important;
+    border: 1px solid rgba(255,255,255,0.52) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 8px 40px rgba(10,42,74,0.08) !important;
+    padding: 2rem 2.5rem 3rem !important;
+    margin-top: 2rem !important;
+    margin-bottom: 2rem !important;
 }
 
 /* Ẩn Streamlit chrome */
 #MainMenu, footer, header { visibility: hidden; }
 [data-testid="stToolbar"] { display: none; }
 
-/* Main container — frosted glass */
-.block-container {
-    background: rgba(255,255,255,0.2) !important;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-    border: 1px solid rgba(255,255,255,0.5) !important;
-    border-radius: 24px !important;
-    padding: 2rem 2rem 3rem !important;
-    margin-top: 1.5rem !important;
-}
-
-/* Tiêu đề */
+/* Text */
 h1, h2, h3 { color: #0a2a4a !important; }
-p, label, .stMarkdown p { color: rgba(10,42,74,0.75) !important; }
+p, label, .stMarkdown p { color: rgba(10,42,74,0.72) !important; }
+.stCaption, [data-testid="stCaptionContainer"] { color: rgba(10,42,74,0.45) !important; }
 
 /* Text input */
-.stTextInput > div > div > input,
-.stNumberInput > div > div > input {
-    background: rgba(255,255,255,0.35) !important;
+.stTextInput input,
+.stNumberInput input {
+    background: rgba(255,255,255,0.38) !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255,255,255,0.65) !important;
+    border: 1px solid rgba(255,255,255,0.68) !important;
     border-radius: 10px !important;
     color: #0a2a4a !important;
     font-family: 'Inter', sans-serif !important;
+    padding: 8px 12px !important;
 }
-.stTextInput > div > div > input:focus,
-.stNumberInput > div > div > input:focus {
-    border-color: rgba(2,136,206,0.5) !important;
+.stTextInput input:focus, .stNumberInput input:focus {
+    border-color: rgba(2,136,206,0.55) !important;
     box-shadow: 0 0 0 3px rgba(2,136,206,0.12) !important;
+    outline: none !important;
 }
 
 /* File uploader */
-[data-testid="stFileUploader"] > div {
+[data-testid="stFileUploader"],
+[data-testid="stFileUploader"] > div,
+[data-testid="stFileUploaderDropzone"] {
     background: rgba(255,255,255,0.2) !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
-    border: 1.5px dashed rgba(255,255,255,0.65) !important;
+    border: 1.5px dashed rgba(255,255,255,0.68) !important;
     border-radius: 14px !important;
 }
 
-/* Primary button — Anki blue */
+/* Buttons — target nhiều selector để chắc chắn */
+button[data-testid="baseButton-primary"],
+[data-testid="stBaseButton-primary"],
 div.stButton > button[kind="primary"],
-.stButton > button[kind="primary"] {
+.stButton button[kind="primary"] {
     background: rgba(2,136,206,0.82) !important;
     backdrop-filter: blur(8px) !important;
     -webkit-backdrop-filter: blur(8px) !important;
     color: #fff !important;
-    border: 1px solid rgba(255,255,255,0.25) !important;
+    border: 1px solid rgba(255,255,255,0.28) !important;
     border-radius: 12px !important;
     font-family: 'Inter', sans-serif !important;
     font-weight: 500 !important;
-    transition: background .15s !important;
+    padding: 10px 20px !important;
+    box-shadow: 0 2px 12px rgba(2,136,206,0.25) !important;
+    transition: all .15s !important;
 }
+button[data-testid="baseButton-primary"]:hover,
 div.stButton > button[kind="primary"]:hover {
     background: rgba(2,136,206,0.95) !important;
+    box-shadow: 0 4px 16px rgba(2,136,206,0.35) !important;
 }
 
-/* Secondary buttons */
+button[data-testid="baseButton-secondary"],
+[data-testid="stBaseButton-secondary"],
 div.stButton > button:not([kind="primary"]) {
     background: rgba(255,255,255,0.28) !important;
     backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-    border: 1px solid rgba(255,255,255,0.55) !important;
+    border: 1px solid rgba(255,255,255,0.58) !important;
     border-radius: 10px !important;
     color: #0a2a4a !important;
     font-family: 'Inter', sans-serif !important;
+    font-weight: 400 !important;
+    transition: all .15s !important;
 }
 div.stButton > button:not([kind="primary"]):hover {
-    background: rgba(255,255,255,0.42) !important;
+    background: rgba(255,255,255,0.45) !important;
 }
 
 /* Download button */
-div.stDownloadButton > button {
+div.stDownloadButton > button,
+[data-testid="stDownloadButton"] button {
     width: 100% !important;
     background: rgba(2,136,206,0.82) !important;
     backdrop-filter: blur(8px) !important;
     color: #fff !important;
-    border: 1px solid rgba(255,255,255,0.2) !important;
+    border: 1px solid rgba(255,255,255,0.22) !important;
     border-radius: 10px !important;
     font-family: 'Inter', sans-serif !important;
     font-weight: 500 !important;
+    box-shadow: 0 2px 12px rgba(2,136,206,0.2) !important;
 }
-div.stDownloadButton > button:hover {
-    background: rgba(2,136,206,0.95) !important;
-}
+div.stDownloadButton > button:hover { background: rgba(2,136,206,0.95) !important; }
 
 /* Metric cards */
 [data-testid="metric-container"] {
     background: rgba(255,255,255,0.22) !important;
     backdrop-filter: blur(10px) !important;
     -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255,255,255,0.48) !important;
+    border: 1px solid rgba(255,255,255,0.5) !important;
     border-radius: 12px !important;
     padding: 12px 16px !important;
 }
-[data-testid="metric-container"] label { color: rgba(10,42,74,0.5) !important; }
-[data-testid="metric-container"] [data-testid="stMetricValue"] {
-    color: #0a2a4a !important;
-}
+[data-testid="stMetricLabel"] { color: rgba(10,42,74,0.5) !important; }
+[data-testid="stMetricValue"] { color: #0a2a4a !important; }
 
 /* Progress bar */
-.stProgress > div > div {
+[data-testid="stProgressBar"] > div {
     background: rgba(255,255,255,0.3) !important;
     border-radius: 4px !important;
 }
-.stProgress > div > div > div {
+[data-testid="stProgressBar"] > div > div {
     background: rgba(2,136,206,0.78) !important;
     border-radius: 4px !important;
+}
+
+/* Alert / info / success boxes */
+[data-testid="stAlert"],
+.stAlert {
+    background: rgba(255,255,255,0.25) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255,255,255,0.52) !important;
+    border-radius: 12px !important;
+    color: #0a2a4a !important;
 }
 
 /* Expander */
@@ -168,25 +199,24 @@ div.stDownloadButton > button:hover {
     border-radius: 12px !important;
 }
 
-/* Success / info / warning alerts */
-[data-testid="stAlert"] {
-    background: rgba(255,255,255,0.25) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255,255,255,0.5) !important;
-    border-radius: 12px !important;
-    color: #0a2a4a !important;
-}
-
 /* Divider */
 hr { border-color: rgba(255,255,255,0.4) !important; }
 
-/* Radio & checkbox label */
-.stRadio label, .stCheckbox label {
-    color: rgba(10,42,74,0.75) !important;
+/* Tabs */
+[data-testid="stTabs"] [role="tablist"] {
+    background: rgba(255,255,255,0.2) !important;
+    border-radius: 10px !important;
+    padding: 3px !important;
+    border: 1px solid rgba(255,255,255,0.45) !important;
 }
-
-/* Caption */
-.stCaption { color: rgba(10,42,74,0.5) !important; }
+[data-testid="stTabs"] button[role="tab"][aria-selected="true"] {
+    background: rgba(2,136,206,0.75) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+}
+[data-testid="stTabs"] button[role="tab"] {
+    color: rgba(10,42,74,0.65) !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
