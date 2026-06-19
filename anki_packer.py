@@ -15,10 +15,8 @@ Usage:
 
 import hashlib
 import json
-import random
 import shutil
 import sqlite3
-import string
 import time
 import zipfile
 from pathlib import Path

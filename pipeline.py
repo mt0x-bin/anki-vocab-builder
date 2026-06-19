@@ -90,6 +90,7 @@ def _process_word(
     entry: VocabEntry,
     config: PipelineConfig,
     stats: PipelineStats,
+    api_key: str = "",
 ) -> Optional[CardData]:
     """
     Process one word through the full pipeline.
@@ -103,7 +104,6 @@ def _process_word(
     ipa = dict_result.ipa  # may be "" if not found — that's ok
 
     # ── Step 2: Gemini enrichment ──
-    api_key = config.gemini_api_key or os.environ.get("GEMINI_API_KEY", "")
     enriched = enrich_word(
         word=word,
         dict_result=dict_result,
@@ -159,6 +159,11 @@ def run_pipeline(
     t_start = time.time()
     stats   = PipelineStats()
 
+    # ── Resolve API key một lần ──
+    api_key = config.gemini_api_key or os.environ.get("GEMINI_API_KEY", "").strip()
+    if not api_key:
+        print("  ⚠️  Không có Gemini API key — tất cả từ sẽ thất bại ở bước enrich")
+
     # ── Parse ──
     entries = parse_vocab_txt(config.txt_file)
     if config.limit:
@@ -183,13 +188,10 @@ def run_pipeline(
         if progress_cb:
             progress_cb(i, stats.total, entry.word)
 
-        card = _process_word(entry, config, stats)
+        card = _process_word(entry, config, stats, api_key)
         if card:
             cards.append(card)
 
-        # Small delay between words to be polite to APIs
-        # (cache hits skip the delay implicitly since they're instant)
-        time.sleep(0.1)
 
     # ── Pack .apkg ──
     print(f"\n{'─'*52}")

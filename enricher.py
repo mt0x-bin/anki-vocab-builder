@@ -19,11 +19,12 @@ Usage:
 import json
 import os
 import re
-from cache_store import cache_get, cache_set
 import time
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import Optional
+
+from cache_store import cache_get, cache_set
 
 from scraper import DictResult, DictSense
 

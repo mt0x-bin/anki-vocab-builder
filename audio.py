@@ -46,11 +46,16 @@ def _tts_fname(word: str, variant: str) -> str:
     return f"tts_{variant}_{slug}.mp3"
 
 
+def _is_phrase(word: str) -> bool:
+    """Phrase/idiom có khoảng trắng → Oxford không có, xuống TTS thẳng."""
+    return " " in word.strip()
+
+
 # ── Oxford audio lookup ────────────────────────────────────────────────────────
 
 def _oxford_audio_url(word: str, variant: str = "br") -> Optional[str]:
     """
-    Try to find Oxford audio URL for a word.
+    Try to find Oxford audio URL for a single word (không phải phrase).
     Returns URL string or None.
     """
     target_cls = "phons_br"   if variant == "br" else "phons_n_am"
@@ -97,19 +102,30 @@ def _download(url: str, dest: Path) -> bool:
 # ── TTS fallback ───────────────────────────────────────────────────────────────
 
 def _tts(text: str, dest: Path, variant: str = "br") -> bool:
-    """Generate TTS audio. edge-tts first, gTTS fallback."""
+    """Generate TTS audio. edge-tts first (chạy trong thread riêng tránh
+    xung đột asyncio với Streamlit), gTTS fallback."""
+
     # Try edge-tts (Microsoft Neural — higher quality)
     try:
         import asyncio
+        import threading
         import edge_tts
 
-        async def _run():
-            await edge_tts.Communicate(
-                text, TTS_VOICES.get(variant, "en-GB-SoniaNeural")
-            ).save(str(dest))
+        result = {"ok": False}
 
-        asyncio.run(_run())
-        if dest.exists() and dest.stat().st_size > 0:
+        def _run_in_thread():
+            async def _gen():
+                await edge_tts.Communicate(
+                    text, TTS_VOICES.get(variant, "en-GB-SoniaNeural")
+                ).save(str(dest))
+            asyncio.run(_gen())
+            result["ok"] = dest.exists() and dest.stat().st_size > 0
+
+        t = threading.Thread(target=_run_in_thread)
+        t.start()
+        t.join(timeout=30)
+
+        if result["ok"]:
             return True
     except ImportError:
         pass
@@ -144,20 +160,22 @@ def fetch_audio(word: str, media_dir: Path, variant: str = "br") -> Optional[str
     """
     media_dir.mkdir(parents=True, exist_ok=True)
 
-    # ── 1. Oxford ──
-    oxford_file = media_dir / _oxford_fname(word, variant)
+    # ── 1. Oxford (chỉ thử với single word, bỏ qua phrase/idiom) ──
+    if not _is_phrase(word):
+        oxford_file = media_dir / _oxford_fname(word, variant)
 
-    # Reuse if already downloaded
-    if oxford_file.exists() and oxford_file.stat().st_size > 0:
-        print(f"  [audio] cached — {oxford_file.name}")
-        return oxford_file.name
-
-    audio_url = _oxford_audio_url(word, variant)
-    if audio_url:
-        if _download(audio_url, oxford_file):
-            print(f"  [audio] Oxford — {oxford_file.name}")
+        if oxford_file.exists() and oxford_file.stat().st_size > 0:
+            print(f"  [audio] cached — {oxford_file.name}")
             return oxford_file.name
-        oxford_file.unlink(missing_ok=True)
+
+        audio_url = _oxford_audio_url(word, variant)
+        if audio_url:
+            if _download(audio_url, oxford_file):
+                print(f"  [audio] Oxford — {oxford_file.name}")
+                return oxford_file.name
+            oxford_file.unlink(missing_ok=True)
+    else:
+        print(f"  [audio] phrase detected — skip Oxford, dùng TTS: {word!r}")
 
     # ── 2. TTS fallback ──
     tts_file = media_dir / _tts_fname(word, variant)

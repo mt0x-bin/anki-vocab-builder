@@ -63,7 +63,7 @@ class DictResult:
     found: bool
 
 
-
+# ── Serialize / Deserialize ──────────────────────────────────────────────────
 
 def _serialize(result: DictResult) -> dict:
     return asdict(result)

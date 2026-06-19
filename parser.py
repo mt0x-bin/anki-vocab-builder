@@ -50,7 +50,7 @@ def _normalize_pos(pos: Optional[str]) -> Optional[str]:
     return _POS_MAP.get(pos.strip().lower(), pos.strip().lower())
 
 
-def parse_vocab_txt(path: Path) -> list[VocabEntry]:
+def parse_vocab_txt(path: Path, encoding: str = "utf-8") -> list[VocabEntry]:
     """
     Parse a vocab txt file, return list of VocabEntry.
     Skips blank lines and comment lines (starting with #).
@@ -59,7 +59,7 @@ def parse_vocab_txt(path: Path) -> list[VocabEntry]:
     skipped = 0
 
     for line_num, raw in enumerate(
-        Path(path).read_text(encoding="utf-8").splitlines(), 1
+        Path(path).read_text(encoding=encoding).splitlines(), 1
     ):
         line = raw.strip()
         if not line or line.startswith("#"):
@@ -101,10 +101,15 @@ if __name__ == "__main__":
         "bad line no colon",       # bad format → skip
     ]
 
-    # Write temp file and parse
-    tmp = Path("/tmp/_test_vocab.txt")
-    tmp.write_text("\n".join(test_lines), encoding="utf-8")
+    # Write temp file and parse (tempfile để chạy được trên cả Windows)
+    import tempfile
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".txt", encoding="utf-8", delete=False
+    ) as f:
+        f.write("\n".join(test_lines))
+        tmp = Path(f.name)
     entries = parse_vocab_txt(tmp)
+    tmp.unlink(missing_ok=True)
 
     print()
     for e in entries:
