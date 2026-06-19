@@ -139,13 +139,17 @@ with col_settings:
         placeholder="IELTS Reading Wk1",
     )
 
-    api_key = st.text_input(
-        "Gemini API key",
-        type="password",
-        value=os.environ.get("GEMINI_API_KEY", ""),
-        placeholder="AIza…",
-        help="Miễn phí tại aistudio.google.com → Get API key",
-    )
+    _env_key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if _env_key:
+        api_key = _env_key
+        st.success("✅ Gemini API key đã được cấu hình")
+    else:
+        api_key = st.text_input(
+            "Gemini API key",
+            type="password",
+            placeholder="AIza… (hoặc set GEMINI_API_KEY trong Secrets)",
+            help="Miễn phí tại aistudio.google.com → Get API key",
+        )
 
     col_v, col_a = st.columns(2)
     with col_v:
